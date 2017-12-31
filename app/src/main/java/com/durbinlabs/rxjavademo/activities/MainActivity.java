@@ -1,7 +1,9 @@
-package com.durbinlabs.rxjavademo;
+package com.durbinlabs.rxjavademo.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.durbinlabs.rxjavademo.R;
 
 public class MainActivity extends AppCompatActivity {
 
