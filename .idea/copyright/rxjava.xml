@@ -1,0 +1,6 @@
+<component name="CopyrightManager">
+  <copyright>
+    <option name="notice" value="Copyright (c) Shaon, &amp;#36;today.year. &#10;This project indents to help the others to  understand RxJava alongside with Retrofit and Room implementation. Direct uses of code from this project will be against copyright law.  " />
+    <option name="myName" value="rxjava" />
+  </copyright>
+</component>
