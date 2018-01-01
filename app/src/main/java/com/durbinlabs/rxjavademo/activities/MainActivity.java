@@ -65,25 +65,7 @@ public class MainActivity extends AppCompatActivity {
                         clients = response.body();
                         //adapter.addAll(clients);
 
-                        getObservable()
-                                .flatMap(new Function<List<Client>, ObservableSource<Client>>
-                                        () {
-                                    @Override
-                                    public ObservableSource<Client> apply(List<Client> clients) throws
-                                            Exception {
-                                        return Observable.fromIterable(clients);
-                                    }
-                                })
-                                .filter(new Predicate<Client>() {
-                                    @Override
-                                    public boolean test(Client client) throws Exception {
-                                        // filtering user who follows me.
-
-                                        return (client.getAge() < 25);
-                                    }
-                                }).observeOn(AndroidSchedulers.mainThread())
-                                .subscribeOn(Schedulers.io())
-                                .subscribe(getObserver());
+                        filterData();
 
                         new Thread(new Runnable() {
                             @Override
@@ -106,10 +88,33 @@ public class MainActivity extends AppCompatActivity {
         return clients;
     }
 
+    private void filterData() {
+        getObservable()
+                .flatMap(new Function<List<Client>, ObservableSource<Client>>
+                        () {
+                    @Override
+                    public ObservableSource<Client> apply(List<Client> clients) throws
+                            Exception {
+                        return Observable.fromIterable(clients);
+                    }
+                })
+                .filter(new Predicate<Client>() {
+                    @Override
+                    public boolean test(Client client) throws Exception {
+                        // filtering user who follows me.
+
+                        return (client.getAge() < 25);
+                    }
+                }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(getObserver());
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
     }
 
     @Override
