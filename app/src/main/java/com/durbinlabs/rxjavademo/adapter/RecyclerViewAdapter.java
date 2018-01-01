@@ -38,12 +38,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Client client = clients.get(pos);
 
         holder.tvName.setText(client.getName());
-        holder.tvAge.setText(client.getAge());
+        holder.tvAge.setText(client.getAge() + "");
     }
 
     @Override
     public int getItemCount() {
         return clients.size();
+    }
+
+    public void addAll(List<Client> clients) {
+        this.clients.addAll(clients);
+        notifyDataSetChanged();
     }
 
     protected class RecyclerViewHolder extends RecyclerView.ViewHolder {
