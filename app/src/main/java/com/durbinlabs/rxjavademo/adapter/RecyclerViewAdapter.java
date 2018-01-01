@@ -51,6 +51,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         notifyDataSetChanged();
     }
 
+    public void add(Client client) {
+        clients.add(client);
+
+    }
+
     protected class RecyclerViewHolder extends RecyclerView.ViewHolder {
         private TextView tvName, tvAge;
 
