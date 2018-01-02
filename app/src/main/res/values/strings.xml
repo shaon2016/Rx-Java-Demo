@@ -4,4 +4,5 @@
     <string name="_25">25</string>
     <string name="filtering_data_using_rxjava">Filtering Data using RxJava</string>
     <string name="without_filtering">Without Filtering (From API)</string>
+    <string name="without_filter_data_from_db">Without Filtering (From Database)</string>
 </resources>

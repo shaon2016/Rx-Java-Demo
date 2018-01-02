@@ -8,6 +8,7 @@
     tools:context="com.durbinlabs.rxjavademo.activities.MainActivity">
 
     <TextView
+        android:id="@+id/tvFilterData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"

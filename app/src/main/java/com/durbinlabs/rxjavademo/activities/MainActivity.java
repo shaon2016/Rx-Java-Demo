@@ -1,5 +1,7 @@
 package com.durbinlabs.rxjavademo.activities;
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,12 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.durbinlabs.rxjavademo.R;
 import com.durbinlabs.rxjavademo.adapter.RecyclerViewAdapterForFilterData;
 import com.durbinlabs.rxjavademo.adapter.RecyclerViewAdapterForWithoutFilterData;
 import com.durbinlabs.rxjavademo.db.AppDatabase;
 import com.durbinlabs.rxjavademo.db.model.Client;
+import com.durbinlabs.rxjavademo.db.viewmodels.ClientViewModel;
 import com.durbinlabs.rxjavademo.network.APIClient;
 import com.durbinlabs.rxjavademo.service.APIService;
 
@@ -40,11 +44,30 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerViewAdapterForWithoutFilterData adapter2;
     private List<Client> clients, modifiedClients;
     private AppDatabase appDatabase;
+    private ClientViewModel clientViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        configLayout();
+        initialization();
+        fetchUserData();
+
+    }
+
+    private void initialization() {
+        clients = new ArrayList<>();
+        modifiedClients = new ArrayList<>();
+        appDatabase = AppDatabase.getInstance(this);
+
+        // TODO view model didnt started. Need to check
+        ViewModelProviders.of(MainActivity.this)
+                .get(ClientViewModel.class);
+    }
+
+    private void configLayout() {
         rv = findViewById(R.id.rv);
         rv2 = findViewById(R.id.rv2);
         rv.setLayoutManager(new LinearLayoutManager(this));
@@ -52,10 +75,6 @@ public class MainActivity extends AppCompatActivity {
         rv.setAdapter(adapter = new RecyclerViewAdapterForFilterData(new ArrayList<Client>(), this));
         rv2.setAdapter(adapter2 = new RecyclerViewAdapterForWithoutFilterData(new ArrayList<Client>
                 (), this));
-        clients = new ArrayList<>();
-        modifiedClients = new ArrayList<>();
-        fetchUserData();
-        appDatabase = AppDatabase.getInstance(this);
     }
 
     private List<Client> fetchUserData() {
@@ -95,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void filterData() {
-        getObservable()
+        getObservableForFilterData()
                 .flatMap(new Function<List<Client>, ObservableSource<Client>>
                         () {
                     @Override
@@ -113,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(getObserver());
+                .subscribe(getObserverForFilterData());
     }
 
 
@@ -133,11 +152,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadDataFromDb() {
-       // TODO need to load data using observable
-        // adapter.addAll(appDatabase.clientDao().getAll());
+        TextView tv = findViewById(R.id.tvFilterData);
+        tv.setText(getResources().getString(R.string.without_filter_data_from_db));
+        adapter2.addAll(clientViewModel.getClient());
     }
 
-    private Observable<List<Client>> getObservable() {
+    private Observable<List<Client>> getObservableForFilterData() {
         return Observable.create(new ObservableOnSubscribe<List<Client>>() {
             @Override
             public void subscribe(ObservableEmitter<List<Client>> e) throws Exception {
@@ -149,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private Observer<Client> getObserver() {
+    private Observer<Client> getObserverForFilterData() {
         return new Observer<Client>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -174,4 +194,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
     }
+
+
 }
