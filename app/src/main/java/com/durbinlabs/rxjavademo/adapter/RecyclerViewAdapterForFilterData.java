@@ -15,12 +15,12 @@ import java.util.List;
  * Created by hp on 1/1/2018.
  */
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder> {
+public class RecyclerViewAdapterForFilterData extends RecyclerView.Adapter<RecyclerViewAdapterForFilterData.RecyclerViewHolder> {
 
     private List<Client> clients;
     private Context context;
 
-    public RecyclerViewAdapter(List<Client> clients, Context context) {
+    public RecyclerViewAdapterForFilterData(List<Client> clients, Context context) {
         this.clients = clients;
         this.context = context;
     }

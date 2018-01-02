@@ -9,7 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.durbinlabs.rxjavademo.R;
-import com.durbinlabs.rxjavademo.adapter.RecyclerViewAdapter;
+import com.durbinlabs.rxjavademo.adapter.RecyclerViewAdapterForFilterData;
+import com.durbinlabs.rxjavademo.adapter.RecyclerViewAdapterForWithoutFilterData;
 import com.durbinlabs.rxjavademo.db.AppDatabase;
 import com.durbinlabs.rxjavademo.db.model.Client;
 import com.durbinlabs.rxjavademo.network.APIClient;
@@ -34,8 +35,9 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private RecyclerView rv;
-    private RecyclerViewAdapter adapter;
+    private RecyclerView rv, rv2;
+    private RecyclerViewAdapterForFilterData adapter;
+    private RecyclerViewAdapterForWithoutFilterData adapter2;
     private List<Client> clients, modifiedClients;
     private AppDatabase appDatabase;
 
@@ -44,8 +46,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         rv = findViewById(R.id.rv);
+        rv2 = findViewById(R.id.rv2);
         rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setAdapter(adapter = new RecyclerViewAdapter(new ArrayList<Client>(), this));
+        rv2.setLayoutManager(new LinearLayoutManager(this));
+        rv.setAdapter(adapter = new RecyclerViewAdapterForFilterData(new ArrayList<Client>(), this));
+        rv2.setAdapter(adapter2 = new RecyclerViewAdapterForWithoutFilterData(new ArrayList<Client>
+                (), this));
         clients = new ArrayList<>();
         modifiedClients = new ArrayList<>();
         fetchUserData();
@@ -63,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onResponse(Call<List<Client>> call, Response<List<Client>> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         clients = response.body();
-                        //adapter.addAll(clients);
+                        adapter2.addAll(clients);
 
                         filterData();
 
@@ -127,7 +133,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadDataFromDb() {
-        adapter.addAll(appDatabase.clientDao().getAll());
+       // TODO need to load data using observable
+        // adapter.addAll(appDatabase.clientDao().getAll());
     }
 
     private Observable<List<Client>> getObservable() {
