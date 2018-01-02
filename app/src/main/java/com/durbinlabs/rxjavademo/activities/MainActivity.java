@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         appDatabase = AppDatabase.getInstance(this);
 
         // TODO view model didnt started. Need to check
-        ViewModelProviders.of(MainActivity.this)
+        clientViewModel = ViewModelProviders.of(MainActivity.this)
                 .get(ClientViewModel.class);
     }
 
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
     private void loadDataFromDb() {
         TextView tv = findViewById(R.id.tvFilterData);
         tv.setText(getResources().getString(R.string.without_filter_data_from_db));
-        adapter2.addAll(clientViewModel.getClient());
+        adapter.addAll(clientViewModel.getClient());
     }
 
     private Observable<List<Client>> getObservableForFilterData() {

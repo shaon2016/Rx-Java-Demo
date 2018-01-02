@@ -34,7 +34,6 @@ public class RecyclerViewAdapterForFilterData extends RecyclerView.Adapter<Recyc
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
         int pos = holder.getAdapterPosition();
-
         Client client = clients.get(pos);
 
         holder.tvName.setText(client.getName());
@@ -53,7 +52,6 @@ public class RecyclerViewAdapterForFilterData extends RecyclerView.Adapter<Recyc
 
     public void add(Client client) {
         clients.add(client);
-
     }
 
     protected class RecyclerViewHolder extends RecyclerView.ViewHolder {
