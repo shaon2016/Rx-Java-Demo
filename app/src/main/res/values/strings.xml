@@ -2,4 +2,6 @@
     <string name="app_name">Rx Java Demo</string>
     <string name="name">name</string>
     <string name="_25">25</string>
+    <string name="filtering_data_using_rxjava">Filtering Data using RxJava</string>
+    <string name="without_filtering">Without Filtering (From API)</string>
 </resources>
