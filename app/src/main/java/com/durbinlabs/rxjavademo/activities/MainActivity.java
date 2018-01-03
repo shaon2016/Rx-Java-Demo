@@ -33,6 +33,8 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
+import io.reactivex.internal.observers.DisposableLambdaObserver;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Request;
 import retrofit2.Call;
@@ -47,21 +49,18 @@ public class MainActivity extends AppCompatActivity {
     private List<Client> clients, modifiedClients;
     private AppDatabase appDatabase;
     private ClientViewModel clientViewModel;
-    private CompositeDisposable compositeDisposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // To stop observable to be observed or to be worked when activity/ fragment stop
-        compositeDisposable = new CompositeDisposable();
         configLayout();
         initialization();
         //fetchUserData();
         fetch().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(getObservableFetchData());
+                .subscribe(getObservableFetch());
     }
 
     private void initialization() {
@@ -69,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         modifiedClients = new ArrayList<>();
         appDatabase = AppDatabase.getInstance(this);
 
-        // TODO view model didnt started. Need to check
         clientViewModel = ViewModelProviders.of(MainActivity.this)
                 .get(ClientViewModel.class);
     }
@@ -142,6 +140,62 @@ public class MainActivity extends AppCompatActivity {
         adapter.addAll(clientViewModel.getClient());
     }
 
+    // Fetching Data
+    private Observable fetch() {
+        APIService service = APIClient.getRetrofit().create(APIService.class);
+        final Call<List<Client>> call = service.getAll();
+
+        return Observable.create(e -> call.enqueue(new Callback<List<Client>>() {
+            @Override
+            public void onResponse(Call<List<Client>> call, Response<List<Client>> response) {
+                e.onNext(response.body());
+                clients = response.body();
+                filterData();
+                insertIntoDb();
+            }
+
+            @Override
+            public void onFailure(Call<List<Client>> call, Throwable t) {
+
+            }
+        }));
+    }
+
+    private Observer getObservableFetch() {
+        return new Observer<List<Client>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Client> clients) {
+                adapter2.addAll(clients);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+    }
+
+    private void insertIntoDb() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (Client client : clients)
+                    appDatabase.clientDao().insert(client);
+            }
+        }).start();
+    }
+
+    // Filtering Fetched Data
     private void filterData() {
         getObservableForFilterData()
                 .flatMap(new Function<List<Client>, ObservableSource<Client>>
@@ -193,61 +247,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete() {
                 adapter.addAll(modifiedClients);
-            }
-        };
-    }
-
-
-    private Observable fetch() {
-        APIService service = APIClient.getRetrofit().create(APIService.class);
-        final Call<List<Client>> call = service.getAll();
-
-        return Observable.create(e -> call.enqueue(new Callback<List<Client>>() {
-            @Override
-            public void onResponse(Call<List<Client>> call, Response<List<Client>> response) {
-                e.onNext(response.body());
-                clients = response.body();
-                filterData();
-                insertIntoDb();
-            }
-
-            @Override
-            public void onFailure(Call<List<Client>> call, Throwable t) {
-
-            }
-        }));
-    }
-
-    private void insertIntoDb() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (Client client : clients)
-                    appDatabase.clientDao().insert(client);
-            }
-        }).start();
-    }
-
-    private Observer<List<Client>> getObservableFetchData() {
-        return new Observer<List<Client>>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(List<Client> clients) {
-                adapter2.addAll(clients);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
             }
         };
     }
