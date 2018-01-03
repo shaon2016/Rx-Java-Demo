@@ -29,10 +29,12 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,16 +47,21 @@ public class MainActivity extends AppCompatActivity {
     private List<Client> clients, modifiedClients;
     private AppDatabase appDatabase;
     private ClientViewModel clientViewModel;
+    private CompositeDisposable compositeDisposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // To stop observable to be observed or to be worked when activity/ fragment stop
+        compositeDisposable = new CompositeDisposable();
         configLayout();
         initialization();
-        fetchUserData();
-
+        //fetchUserData();
+        fetch().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(getObservableFetchData());
     }
 
     private void initialization() {
@@ -88,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onResponse(Call<List<Client>> call, Response<List<Client>> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         clients = response.body();
-                        adapter2.addAll(clients);
+                        //adapter2.addAll(clients);
 
                         filterData();
 
@@ -113,6 +120,28 @@ public class MainActivity extends AppCompatActivity {
         return clients;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_from_db) {
+            loadDataFromDb();
+            return true;
+        }
+        return false;
+    }
+
+    private void loadDataFromDb() {
+        TextView tv = findViewById(R.id.tvFilterData);
+        tv.setText(getResources().getString(R.string.without_filter_data_from_db));
+        adapter.addAll(clientViewModel.getClient());
+    }
+
     private void filterData() {
         getObservableForFilterData()
                 .flatMap(new Function<List<Client>, ObservableSource<Client>>
@@ -135,36 +164,11 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(getObserverForFilterData());
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_from_db) {
-            loadDataFromDb();
-            return true;
-        }
-        return false;
-    }
-
-    private void loadDataFromDb() {
-        TextView tv = findViewById(R.id.tvFilterData);
-        tv.setText(getResources().getString(R.string.without_filter_data_from_db));
-        adapter.addAll(clientViewModel.getClient());
-    }
-
-    private Observable<List<Client>> getObservableForFilterData() {
-        return Observable.create(new ObservableOnSubscribe<List<Client>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<Client>> e) throws Exception {
-                if (!e.isDisposed()) {
-                    e.onNext(clients);
-                    e.onComplete();
-                }
+    private Observable getObservableForFilterData() {
+        return Observable.create(e -> {
+            if (!e.isDisposed()) {
+                e.onNext(clients);
+                e.onComplete();
             }
         });
     }
@@ -179,7 +183,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onNext(Client client) {
                 modifiedClients.add(client);
-                Log.d(TAG, client.getName() + "");
             }
 
             @Override
@@ -190,10 +193,62 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete() {
                 adapter.addAll(modifiedClients);
-                Log.d(TAG, modifiedClients.size() + "LOL");
             }
         };
     }
 
 
+    private Observable fetch() {
+        APIService service = APIClient.getRetrofit().create(APIService.class);
+        final Call<List<Client>> call = service.getAll();
+
+        return Observable.create(e -> call.enqueue(new Callback<List<Client>>() {
+            @Override
+            public void onResponse(Call<List<Client>> call, Response<List<Client>> response) {
+                e.onNext(response.body());
+                clients = response.body();
+                filterData();
+                insertIntoDb();
+            }
+
+            @Override
+            public void onFailure(Call<List<Client>> call, Throwable t) {
+
+            }
+        }));
+    }
+
+    private void insertIntoDb() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (Client client : clients)
+                    appDatabase.clientDao().insert(client);
+            }
+        }).start();
+    }
+
+    private Observer<List<Client>> getObservableFetchData() {
+        return new Observer<List<Client>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<Client> clients) {
+                adapter2.addAll(clients);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+    }
 }
