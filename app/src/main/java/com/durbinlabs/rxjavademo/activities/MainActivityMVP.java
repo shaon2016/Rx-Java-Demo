@@ -11,7 +11,8 @@ import com.durbinlabs.rxjavademo.mvp.MainActivityContractor;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivityMVP extends AppCompatActivity implements MainActivityContractor.View {
+public class MainActivityMVP extends AppCompatActivity implements MainActivityContractor.View,
+        MainActivityContractor.requiredForOperation {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +46,14 @@ public class MainActivityMVP extends AppCompatActivity implements MainActivityCo
 
     }
 
+
+    @Override
+    public Context getActivityContext() {
+        return this;
+    }
+
     @Override
     public Context getAppContext() {
-        return null;
+        return getApplicationContext();
     }
 }

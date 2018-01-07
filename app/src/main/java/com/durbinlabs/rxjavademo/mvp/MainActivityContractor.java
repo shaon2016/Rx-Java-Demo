@@ -3,6 +3,7 @@ package com.durbinlabs.rxjavademo.mvp;
 import android.content.Context;
 
 import com.durbinlabs.rxjavademo.data.db.model.Client;
+import com.durbinlabs.rxjavademo.mvp.interfaces.ApiRequest;
 import com.durbinlabs.rxjavademo.mvp.interfaces.BasePresenter;
 import com.durbinlabs.rxjavademo.mvp.interfaces.BaseView;
 
@@ -25,16 +26,20 @@ public interface MainActivityContractor {
         void showFilteredData(HashMap data);
         void showAll(HashMap data);
         void showFromDb(List<Client> clients);
-        Context getAppContext();
     }
 
     /*
     Inspired from google to do app code (TASK model)
      */
-    interface MainActivityModelOperation {
+    interface MainActivityModelOperation extends ApiRequest {
         //TODO edited ()
-        List<String> getData();
+        List<Client> getData();
 
         boolean isDataLoaded();
+    }
+
+    interface requiredForOperation {
+        Context getActivityContext();
+        Context getAppContext();
     }
 }
