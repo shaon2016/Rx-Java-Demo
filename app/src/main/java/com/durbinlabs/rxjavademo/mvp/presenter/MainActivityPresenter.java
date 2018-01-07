@@ -1,25 +1,17 @@
 package com.durbinlabs.rxjavademo.mvp.presenter;
 
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.durbinlabs.rxjavademo.adapter.RecyclerViewAdapterForFilterData;
 import com.durbinlabs.rxjavademo.data.db.model.Client;
 import com.durbinlabs.rxjavademo.mvp.MainActivityContractor;
-import com.durbinlabs.rxjavademo.mvp.interfaces.ApiRequest;
+import com.durbinlabs.rxjavademo.mvp.interfaces.SimpleCallback;
 import com.durbinlabs.rxjavademo.mvp.model.MainActivityModel;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -27,7 +19,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class MainActivityPresenter implements MainActivityContractor.MainActivityPresenter,
-        ApiRequest {
+        SimpleCallback {
     private static final String TAG = MainActivityPresenter.class.getSimpleName();
     private WeakReference<MainActivityContractor.View> view;
     private MainActivityModel model;
@@ -111,13 +103,8 @@ public class MainActivityPresenter implements MainActivityContractor.MainActivit
 
 
     @Override
-    public void onRequestComplete(Object o) {
+    public void justMe(Object o) {
         getView().showFilteredData((List<Client>) o);
         Log.d(TAG, ((List<Client>) o).size() + "");
-    }
-
-    @Override
-    public void onRequestError(String errorMsg) {
-
     }
 }

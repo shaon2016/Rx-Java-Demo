@@ -4,7 +4,7 @@ import com.durbinlabs.rxjavademo.data.db.model.Client;
 import com.durbinlabs.rxjavademo.data.network.APIClient;
 import com.durbinlabs.rxjavademo.data.service.APIService;
 import com.durbinlabs.rxjavademo.mvp.MainActivityContractor;
-import com.durbinlabs.rxjavademo.mvp.interfaces.ApiRequest;
+import com.durbinlabs.rxjavademo.mvp.interfaces.SimpleCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +26,13 @@ import retrofit2.Response;
  */
 
 public class MainActivityModel implements MainActivityContractor.MainActivityModelOperation {
-    private ApiRequest apiRequest;
+    private SimpleCallback callback;
     private MainActivityContractor.MainActivityPresenter presenter;
     private List<Client> clients, modifiedClients;
 
     public MainActivityModel(MainActivityContractor.MainActivityPresenter presenter,
-                             ApiRequest apiRequest) {
-        this.apiRequest = apiRequest;
+                             SimpleCallback callback) {
+        this.callback = callback;
         this.presenter = presenter;
         clients = new ArrayList<>();
         modifiedClients = new ArrayList<>();
@@ -107,14 +107,9 @@ public class MainActivityModel implements MainActivityContractor.MainActivityMod
 
             @Override
             public void onComplete() {
-                apiRequest.onRequestComplete(modifiedClients);
+                callback.justMe(modifiedClients);
             }
         };
     }
-
-    public List<Client> getFilteredData() {
-        return modifiedClients;
-    }
-
 
 }
