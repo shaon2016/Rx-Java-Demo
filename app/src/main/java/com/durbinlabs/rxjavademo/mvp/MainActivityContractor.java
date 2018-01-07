@@ -38,6 +38,10 @@ public interface MainActivityContractor {
      */
     interface MainActivityModelOperation {
         Observable fetch();
+
+        Observable getObservableForFilterData(List<Client> clients);
+
+        void filter(List<Client> clients);
     }
 
     interface requiredForOperation {

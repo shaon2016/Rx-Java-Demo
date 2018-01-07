@@ -72,7 +72,7 @@ public class MainActivityMVP extends AppCompatActivity implements MainActivityCo
 
     @Override
     public void showFilteredData(List<Client> clients) {
-
+        adapter.addAll(clients);
     }
 
     @Override

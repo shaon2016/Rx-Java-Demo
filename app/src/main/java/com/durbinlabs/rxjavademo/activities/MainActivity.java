@@ -195,8 +195,7 @@ public class MainActivity extends AppCompatActivity {
     // Filtering Fetched Data
     private void filterData() {
         getObservableForFilterData()
-                .flatMap(new Function<List<Client>, ObservableSource<Client>>
-                        () {
+                .flatMap(new Function<List<Client>, ObservableSource<Client>>() {
                     @Override
                     public ObservableSource<Client> apply(List<Client> clients) throws
                             Exception {
@@ -206,7 +205,6 @@ public class MainActivity extends AppCompatActivity {
                 .filter(new Predicate<Client>() {
                     @Override
                     public boolean test(Client client) throws Exception {
-                        // filtering user who follows me.
 
                         return (client.getAge() < 25);
                     }
