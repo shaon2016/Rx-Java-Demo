@@ -25,12 +25,7 @@ public class ClientViewModel extends AndroidViewModel {
     }
 
     private void loadData() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                clients = db.clientDao().getAll();
-            }
-        }).start();
+        new Thread(() -> clients = db.clientDao().getAll()).start();
     }
 
     public List<Client> getClient() {
