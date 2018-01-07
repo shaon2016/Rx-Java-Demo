@@ -8,4 +8,5 @@
     <string name="from_database">From Database</string>
     <string name="mvp">mvp</string>
     <string name="mvp_example">MVP EXAMPLE</string>
+    <string name="null_string">View is not available</string>
 </resources>

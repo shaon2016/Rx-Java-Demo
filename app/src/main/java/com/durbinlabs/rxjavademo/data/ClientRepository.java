@@ -7,6 +7,7 @@ import com.durbinlabs.rxjavademo.mvp.interfaces.ApiRequest;
  */
 
 public class ClientRepository implements ApiRequest {
+
     @Override
     public void onRequestComplete(Object o) {
 
