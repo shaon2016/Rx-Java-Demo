@@ -10,6 +10,12 @@ public class MainActivityPresenter implements MainActivityContractor.MainActivit
     private MainActivityContractor.View view;
     private MainActivityContractor.MainActivityModelOperation modelOperation;
 
+    public MainActivityPresenter(MainActivityContractor.View view,
+                                 MainActivityContractor.MainActivityModelOperation modelOperation) {
+        this.view = view;
+        this.modelOperation = modelOperation;
+    }
+
     @Override
     public void start() {
 
@@ -27,12 +33,14 @@ public class MainActivityPresenter implements MainActivityContractor.MainActivit
 
     @Override
     public void destroy() {
-
+        if (view != null)
+            view = null;
     }
 
     @Override
     public void resume() {
-
+        if (view != null)
+            view.showLoading();
     }
 
 }

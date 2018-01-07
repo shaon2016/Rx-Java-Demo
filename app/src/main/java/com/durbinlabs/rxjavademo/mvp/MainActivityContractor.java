@@ -2,7 +2,7 @@ package com.durbinlabs.rxjavademo.mvp;
 
 import android.content.Context;
 
-import com.durbinlabs.rxjavademo.db.model.Client;
+import com.durbinlabs.rxjavademo.data.db.model.Client;
 import com.durbinlabs.rxjavademo.mvp.interfaces.BasePresenter;
 import com.durbinlabs.rxjavademo.mvp.interfaces.BaseView;
 

@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.durbinlabs.rxjavademo.R;
-import com.durbinlabs.rxjavademo.db.model.Client;
+import com.durbinlabs.rxjavademo.data.db.model.Client;
 
 import java.util.List;
 

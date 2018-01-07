@@ -1,15 +1,12 @@
-package com.durbinlabs.rxjavademo.db.viewmodels;
+package com.durbinlabs.rxjavademo.data.db.viewmodels;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-import com.durbinlabs.rxjavademo.db.AppDatabase;
-import com.durbinlabs.rxjavademo.db.model.Client;
+import com.durbinlabs.rxjavademo.data.db.AppDatabase;
+import com.durbinlabs.rxjavademo.data.db.model.Client;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

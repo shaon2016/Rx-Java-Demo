@@ -1,4 +1,4 @@
-package com.durbinlabs.rxjavademo.network;
+package com.durbinlabs.rxjavademo.data.network;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
