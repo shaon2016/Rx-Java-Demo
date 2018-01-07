@@ -22,9 +22,6 @@ import retrofit2.Response;
 public class MainActivityModel implements MainActivityContractor.MainActivityModelOperation {
 
 
-
-
-
     @Override
     public Observable fetch() {
         APIService service = APIClient.getRetrofit().create(APIService.class);

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.durbinlabs.rxjavademo.R;
 import com.durbinlabs.rxjavademo.adapter.RecyclerViewAdapterForFilterData;
@@ -14,6 +15,7 @@ import com.durbinlabs.rxjavademo.data.db.AppDatabase;
 import com.durbinlabs.rxjavademo.data.db.model.Client;
 import com.durbinlabs.rxjavademo.data.db.viewmodels.ClientViewModel;
 import com.durbinlabs.rxjavademo.mvp.MainActivityContractor;
+import com.durbinlabs.rxjavademo.mvp.presenter.MainActivityPresenter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +24,7 @@ import java.util.List;
 public class MainActivityMVP extends AppCompatActivity implements MainActivityContractor.View,
         MainActivityContractor.requiredForOperation {
 
-    private MainActivityContractor.MainActivityPresenter presenter;
+    private MainActivityPresenter presenter;
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private RecyclerView rv, rv2;
@@ -37,9 +39,11 @@ public class MainActivityMVP extends AppCompatActivity implements MainActivityCo
 
         configLayout();
         initialization();
+        presenter.loadDataFromServer();
     }
 
     private void initialization() {
+        presenter = new MainActivityPresenter(this);
         clients = new ArrayList<>();
         modifiedClients = new ArrayList<>();
     }
@@ -57,12 +61,12 @@ public class MainActivityMVP extends AppCompatActivity implements MainActivityCo
 
     @Override
     public void showLoading() {
-
+        Toast.makeText(this, "Loading Started", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void stopLoading() {
-
+        Toast.makeText(this, "Loading Stopped", Toast.LENGTH_SHORT).show();
     }
 
 

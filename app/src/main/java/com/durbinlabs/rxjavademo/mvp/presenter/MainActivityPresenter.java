@@ -22,8 +22,7 @@ public class MainActivityPresenter implements MainActivityContractor.MainActivit
     private MainActivityModel model;
     private List<Client> clients;
 
-    public MainActivityPresenter(MainActivityContractor.View view,
-                                 MainActivityContractor.MainActivityModelOperation modelOperation) {
+    public MainActivityPresenter(MainActivityContractor.View view) {
         this.view = new WeakReference<MainActivityContractor.View>(view);
         model = new MainActivityModel();
         clients = new ArrayList<>();
@@ -58,10 +57,10 @@ public class MainActivityPresenter implements MainActivityContractor.MainActivit
 
     @Override
     public void resume() {
-        loadDataFromServer();
+
     }
 
-    private void loadDataFromServer() {
+    public void loadDataFromServer() {
 
         getView().showLoading();
 
