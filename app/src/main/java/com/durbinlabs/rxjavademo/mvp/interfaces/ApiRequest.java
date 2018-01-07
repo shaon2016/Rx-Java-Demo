@@ -5,7 +5,7 @@ package com.durbinlabs.rxjavademo.mvp.interfaces;
  */
 
 public interface ApiRequest {
-    void onResquestComplete();
+    public void onRequestComplete(Object o);
 
-    void onRequestError();
+    public void onRequestError(String errorMsg);
 }

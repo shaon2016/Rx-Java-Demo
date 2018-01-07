@@ -1,6 +1,6 @@
-package com.durbinlabs.rxjavademo.service;
+package com.durbinlabs.rxjavademo.data.service;
 
-import com.durbinlabs.rxjavademo.db.model.Client;
+import com.durbinlabs.rxjavademo.data.db.model.Client;
 
 import java.util.List;
 

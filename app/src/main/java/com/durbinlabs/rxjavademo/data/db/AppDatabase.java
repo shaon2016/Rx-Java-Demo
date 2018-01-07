@@ -1,12 +1,12 @@
-package com.durbinlabs.rxjavademo.db;
+package com.durbinlabs.rxjavademo.data.db;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-import com.durbinlabs.rxjavademo.db.dao.ClientDao;
-import com.durbinlabs.rxjavademo.db.model.Client;
+import com.durbinlabs.rxjavademo.data.db.dao.ClientDao;
+import com.durbinlabs.rxjavademo.data.db.model.Client;
 
 /**
  * Created by Shaon on 1/1/2018.

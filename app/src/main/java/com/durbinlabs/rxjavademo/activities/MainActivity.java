@@ -1,12 +1,11 @@
 package com.durbinlabs.rxjavademo.activities;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -14,29 +13,23 @@ import android.widget.TextView;
 import com.durbinlabs.rxjavademo.R;
 import com.durbinlabs.rxjavademo.adapter.RecyclerViewAdapterForFilterData;
 import com.durbinlabs.rxjavademo.adapter.RecyclerViewAdapterForWithoutFilterData;
-import com.durbinlabs.rxjavademo.db.AppDatabase;
-import com.durbinlabs.rxjavademo.db.model.Client;
-import com.durbinlabs.rxjavademo.db.viewmodels.ClientViewModel;
-import com.durbinlabs.rxjavademo.network.APIClient;
-import com.durbinlabs.rxjavademo.service.APIService;
+import com.durbinlabs.rxjavademo.data.db.AppDatabase;
+import com.durbinlabs.rxjavademo.data.db.model.Client;
+import com.durbinlabs.rxjavademo.data.db.viewmodels.ClientViewModel;
+import com.durbinlabs.rxjavademo.data.network.APIClient;
+import com.durbinlabs.rxjavademo.data.service.APIService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
-import io.reactivex.internal.observers.DisposableLambdaObserver;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -131,6 +124,10 @@ public class MainActivity extends AppCompatActivity {
             loadDataFromDb();
             return true;
         }
+        if (item.getItemId() == R.id.mvp) {
+            startActivity(new Intent(this, MainActivityMVP.class));
+            return true;
+        }
         return false;
     }
 
@@ -198,8 +195,7 @@ public class MainActivity extends AppCompatActivity {
     // Filtering Fetched Data
     private void filterData() {
         getObservableForFilterData()
-                .flatMap(new Function<List<Client>, ObservableSource<Client>>
-                        () {
+                .flatMap(new Function<List<Client>, ObservableSource<Client>>() {
                     @Override
                     public ObservableSource<Client> apply(List<Client> clients) throws
                             Exception {
@@ -209,7 +205,6 @@ public class MainActivity extends AppCompatActivity {
                 .filter(new Predicate<Client>() {
                     @Override
                     public boolean test(Client client) throws Exception {
-                        // filtering user who follows me.
 
                         return (client.getAge() < 25);
                     }

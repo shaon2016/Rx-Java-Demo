@@ -1,4 +1,4 @@
-package com.durbinlabs.rxjavademo.db.model;
+package com.durbinlabs.rxjavademo.data.db.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
