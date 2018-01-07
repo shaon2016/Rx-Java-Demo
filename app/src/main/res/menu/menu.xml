@@ -4,6 +4,10 @@
 
     <item
         android:id="@+id/menu_from_db"
-        android:title="From Database"
+        android:title="@string/from_database"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/mvp"
+        android:title="@string/mvp_example" />
 </menu>

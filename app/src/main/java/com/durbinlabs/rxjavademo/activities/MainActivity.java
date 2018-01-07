@@ -1,6 +1,7 @@
 package com.durbinlabs.rxjavademo.activities;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -129,6 +130,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_from_db) {
             loadDataFromDb();
+            return true;
+        }
+        if (item.getItemId() == R.id.mvp) {
+            startActivity(new Intent(this, MainActivityMVP.class));
             return true;
         }
         return false;

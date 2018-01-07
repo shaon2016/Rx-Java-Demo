@@ -5,4 +5,7 @@
     <string name="filtering_data_using_rxjava">Filtering Data using RxJava</string>
     <string name="without_filtering">Without Filtering (From API)</string>
     <string name="without_filter_data_from_db">Without Filtering (From Database)</string>
+    <string name="from_database">From Database</string>
+    <string name="mvp">mvp</string>
+    <string name="mvp_example">MVP EXAMPLE</string>
 </resources>
