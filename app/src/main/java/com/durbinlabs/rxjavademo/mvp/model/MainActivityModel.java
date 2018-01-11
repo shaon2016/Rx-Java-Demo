@@ -40,21 +40,22 @@ public class MainActivityModel implements MainActivityContractor.MainActivityMod
 
     @Override
     public Observable fetch() {
-        APIService service = APIClient.getRetrofit().create(APIService.class);
-        final Call<List<Client>> call = service.getAll();
-
-        return Observable.create(e -> call.enqueue(new Callback<List<Client>>() {
-            @Override
-            public void onResponse(Call<List<Client>> call, Response<List<Client>> response) {
-                e.onNext(response.body());
-                e.onComplete();
-            }
-
-            @Override
-            public void onFailure(Call<List<Client>> call, Throwable t) {
-
-            }
-        }));
+//        APIService service = APIClient.getRetrofit().create(APIService.class);
+//        final Call<List<Client>> call = service.getAll();
+//
+//        return Observable.create(e -> call.enqueue(new Callback<List<Client>>() {
+//            @Override
+//            public void onResponse(Call<List<Client>> call, Response<List<Client>> response) {
+//                e.onNext(response.body());
+//                e.onComplete();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Client>> call, Throwable t) {
+//
+//            }
+//        }));
+        return null;
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.durbinlabs.rxjavademo.data.db.model.Client;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
@@ -13,5 +14,5 @@ import retrofit2.http.GET;
 
 public interface APIService {
     @GET("/rxjava/clients.php")
-    Call<List<Client>> getAll();
+    Observable<List<Client>> getAll();
 }

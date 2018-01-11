@@ -78,9 +78,9 @@ public class MainActivityPresenter implements MainActivityContractor.MainActivit
 
         getView().showLoading();
 
-        model.fetch().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(getObservableFetch());
+//        model.fetch().subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(getObservableFetch());
     }
 
     private Observer getObservableFetch() {
