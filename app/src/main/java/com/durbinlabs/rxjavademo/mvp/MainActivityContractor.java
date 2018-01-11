@@ -37,7 +37,7 @@ public interface MainActivityContractor {
     Inspired from google to do app code (TASK model)
      */
     interface MainActivityModelOperation {
-        Observable fetch();
+        void fetch();
 
         Observable getObservableForFilterData(List<Client> clients);
 

@@ -3,6 +3,8 @@ package com.durbinlabs.rxjavademo.data.db.model;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by hp on 1/1/2018.
  */

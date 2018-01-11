@@ -77,13 +77,13 @@ public class MainActivityPresenter implements MainActivityContractor.MainActivit
     public void loadDataFromServer() {
 
         getView().showLoading();
-
+        model.fetch();
 //        model.fetch().subscribeOn(Schedulers.io())
 //                .observeOn(AndroidSchedulers.mainThread())
 //                .subscribe(getObservableFetch());
     }
 
-    private Observer getObservableFetch() {
+    public Observer getObservableFetch() {
         return new Observer<List<Client>>() {
             @Override
             public void onSubscribe(Disposable d) {

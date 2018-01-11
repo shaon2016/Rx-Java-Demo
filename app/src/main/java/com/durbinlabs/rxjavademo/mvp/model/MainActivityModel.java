@@ -5,6 +5,7 @@ import com.durbinlabs.rxjavademo.data.network.APIClient;
 import com.durbinlabs.rxjavademo.data.service.APIService;
 import com.durbinlabs.rxjavademo.mvp.MainActivityContractor;
 import com.durbinlabs.rxjavademo.mvp.interfaces.ApiRequest;
+import com.durbinlabs.rxjavademo.mvp.presenter.MainActivityPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +28,10 @@ import retrofit2.Response;
 
 public class MainActivityModel implements MainActivityContractor.MainActivityModelOperation {
     private ApiRequest apiRequest;
-    private MainActivityContractor.MainActivityPresenter presenter;
+    private MainActivityPresenter presenter;
     private List<Client> clients, modifiedClients;
 
-    public MainActivityModel(MainActivityContractor.MainActivityPresenter presenter,
+    public MainActivityModel(MainActivityPresenter presenter,
                              ApiRequest apiRequest) {
         this.apiRequest = apiRequest;
         this.presenter = presenter;
@@ -39,23 +40,15 @@ public class MainActivityModel implements MainActivityContractor.MainActivityMod
     }
 
     @Override
-    public Observable fetch() {
-//        APIService service = APIClient.getRetrofit().create(APIService.class);
-//        final Call<List<Client>> call = service.getAll();
-//
-//        return Observable.create(e -> call.enqueue(new Callback<List<Client>>() {
-//            @Override
-//            public void onResponse(Call<List<Client>> call, Response<List<Client>> response) {
-//                e.onNext(response.body());
-//                e.onComplete();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Client>> call, Throwable t) {
-//
-//            }
-//        }));
-        return null;
+    public void fetch() {
+        APIService service = APIClient.getRetrofit().create(APIService.class);
+        Observable<List<Client>> call = service.getAll();
+
+        call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(presenter.getObservableFetch());
+
+
     }
 
     @Override
