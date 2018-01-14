@@ -2,6 +2,7 @@ package com.durbinlabs.rxjavademo.activities;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -145,7 +146,17 @@ public class MainActivity extends AppCompatActivity {
     private void loadDataFromDb() {
         TextView tv = findViewById(R.id.tvFilterData);
         tv.setText(getResources().getString(R.string.without_filter_data_from_db));
-        adapter.addAll(clientViewModel.getClient());
+        new Thread(() -> {
+            List<Client> clients = appDatabase.clientDao().getAll();
+
+            Runnable runnable = () -> {
+                if (!clients.isEmpty())
+                    adapter.addAll(clients);
+            };
+
+            android.os.Handler handler = new android.os.Handler(Looper.getMainLooper());
+            handler.post(runnable);
+        }).start();
     }
 
 
