@@ -13,11 +13,10 @@ import com.durbinlabs.rxjavademo.data.service.APIService;
 import com.durbinlabs.rxjavademo.mvp.MainActivityContractor;
 import com.durbinlabs.rxjavademo.mvp.interfaces.ApiRequest;
 import com.durbinlabs.rxjavademo.mvp.presenter.MainActivityPresenter;
+import com.durbinlabs.rxjavademo.mvp.interfaces.SimpleCallback;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.logging.Handler;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -27,26 +26,24 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
- * Created by hp on 1/7/2018.
+ * Created by Shaon on 1/7/2018.
  */
 
-public class MainActivityModel extends ViewModel implements MainActivityContractor
-        .MainActivityModelOperation {
-    private ApiRequest apiRequest;
+
+public class MainActivityModel implements MainActivityContractor.MainActivityModelOperation {
+    private SimpleCallback callback;
     private MainActivityPresenter presenter;
     private List<Client> clients, modifiedClients;
     private AppDatabase db;
     private static final String TAG = MainActivityModel.class.getSimpleName();
     private Context context;
 
-    public MainActivityModel(MainActivityPresenter presenter, Context context,
-                             ApiRequest apiRequest) {
-        this.apiRequest = apiRequest;
+
+    public MainActivityModel(MainActivityPresenter presenter,
+                             Context context, SimpleCallback callback) {
+        this.callback = callback;
         this.presenter = presenter;
         clients = new ArrayList<>();
         modifiedClients = new ArrayList<>();
@@ -108,12 +105,12 @@ public class MainActivityModel extends ViewModel implements MainActivityContract
         new Thread(() -> {
             clients = db.clientDao().getAll();
 
-           Runnable runnable = () -> {
-               if (!clients.isEmpty())
-                   callBack.onClientsLoaded(clients);
-               else callBack.onDataNotAvailable();
-               Log.d(TAG, "DB clients Size in model: " + clients.size());
-           };
+            Runnable runnable = () -> {
+                if (!clients.isEmpty())
+                    callBack.onClientsLoaded(clients);
+                else callBack.onDataNotAvailable();
+                Log.d(TAG, "DB clients Size in model: " + clients.size());
+            };
 
             android.os.Handler handler = new android.os.Handler(Looper.getMainLooper());
             handler.post(runnable);
@@ -139,7 +136,7 @@ public class MainActivityModel extends ViewModel implements MainActivityContract
 
             @Override
             public void onComplete() {
-                apiRequest.onRequestComplete(modifiedClients);
+                callback.justMe(modifiedClients);
             }
         };
     }
