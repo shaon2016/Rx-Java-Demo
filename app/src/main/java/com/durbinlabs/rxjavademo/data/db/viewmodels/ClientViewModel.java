@@ -10,7 +10,7 @@ import com.durbinlabs.rxjavademo.data.db.model.Client;
 import java.util.List;
 
 /**
- * Created by hp on 1/2/2018.
+ * Created by Shaon on 1/2/2018.
  */
 
 public class ClientViewModel extends AndroidViewModel {
@@ -25,12 +25,7 @@ public class ClientViewModel extends AndroidViewModel {
     }
 
     private void loadData() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                clients = db.clientDao().getAll();
-            }
-        }).start();
+        new Thread(() -> clients = db.clientDao().getAll()).start();
     }
 
     public List<Client> getClient() {

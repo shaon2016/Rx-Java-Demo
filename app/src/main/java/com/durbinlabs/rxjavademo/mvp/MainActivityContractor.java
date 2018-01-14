@@ -42,6 +42,16 @@ public interface MainActivityContractor {
         Observable getObservableForFilterData(List<Client> clients);
 
         void filter(List<Client> clients);
+
+        void saveClients(List<Client> clients);
+
+        void getClientListFromDb(ClientLoadCallBack callBack);
+
+        interface ClientLoadCallBack {
+            void onClientsLoaded(List<Client> clients);
+
+            void onDataNotAvailable();
+        }
     }
 
     interface requiredForOperation {

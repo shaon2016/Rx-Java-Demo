@@ -1,24 +1,22 @@
 package com.durbinlabs.rxjavademo.activities;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.durbinlabs.rxjavademo.R;
 import com.durbinlabs.rxjavademo.adapter.RecyclerViewAdapterForFilterData;
 import com.durbinlabs.rxjavademo.adapter.RecyclerViewAdapterForWithoutFilterData;
-import com.durbinlabs.rxjavademo.data.db.AppDatabase;
 import com.durbinlabs.rxjavademo.data.db.model.Client;
-import com.durbinlabs.rxjavademo.data.db.viewmodels.ClientViewModel;
 import com.durbinlabs.rxjavademo.mvp.MainActivityContractor;
 import com.durbinlabs.rxjavademo.mvp.presenter.MainActivityPresenter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class MainActivityMVP extends AppCompatActivity implements MainActivityContractor.View,
@@ -43,7 +41,7 @@ public class MainActivityMVP extends AppCompatActivity implements MainActivityCo
     }
 
     private void initialization() {
-        presenter = new MainActivityPresenter(this);
+        presenter = new MainActivityPresenter(this, this);
         clients = new ArrayList<>();
         modifiedClients = new ArrayList<>();
     }
@@ -82,7 +80,7 @@ public class MainActivityMVP extends AppCompatActivity implements MainActivityCo
 
     @Override
     public void showFromDb(List<Client> clients) {
-
+        adapter.addAll(clients);
     }
 
 
@@ -94,5 +92,22 @@ public class MainActivityMVP extends AppCompatActivity implements MainActivityCo
     @Override
     public Context getAppContext() {
         return getApplicationContext();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_from_db) {
+            presenter.loadClientsFromDbData();
+            return true;
+        }
+
+        return false;
     }
 }

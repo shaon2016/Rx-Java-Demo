@@ -153,12 +153,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void insertIntoDb(List<Client> clients) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (Client client : clients)
-                    appDatabase.clientDao().insert(client);
-            }
+        new Thread(() -> {
+            for (Client client : clients)
+                appDatabase.clientDao().insert(client);
         }).start();
     }
 

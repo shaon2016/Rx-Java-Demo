@@ -1,5 +1,6 @@
 package com.durbinlabs.rxjavademo.mvp.presenter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
@@ -33,12 +34,13 @@ public class MainActivityPresenter implements MainActivityContractor.MainActivit
     private MainActivityModel model;
     private List<Client> clients, modifiedClients;
 
-    public MainActivityPresenter(MainActivityContractor.View view) {
+    public MainActivityPresenter(MainActivityContractor.View view, Context context) {
         this.view = new WeakReference<MainActivityContractor.View>(view);
         // To communicate with model
-        model = new MainActivityModel(this, this);
+        model = new MainActivityModel(this, context, this);
         clients = new ArrayList<>();
         modifiedClients = new ArrayList<>();
+
     }
 
     private MainActivityContractor.View getView() throws NullPointerException {
@@ -94,6 +96,7 @@ public class MainActivityPresenter implements MainActivityContractor.MainActivit
             public void onNext(List<Client> clients) {
                 getView().showAll(clients);
                 model.filter(clients);
+                model.saveClients(clients);
             }
 
             @Override
@@ -119,5 +122,20 @@ public class MainActivityPresenter implements MainActivityContractor.MainActivit
     @Override
     public void onRequestError(String errorMsg) {
 
+    }
+
+    public void loadClientsFromDbData() {
+        model.getClientListFromDb(new MainActivityContractor.MainActivityModelOperation
+                .ClientLoadCallBack() {
+            @Override
+            public void onClientsLoaded(List<Client> clients) {
+                getView().showFromDb(clients);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+
+            }
+        });
     }
 }

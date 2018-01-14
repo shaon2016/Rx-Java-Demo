@@ -12,7 +12,7 @@ import com.durbinlabs.rxjavademo.data.db.model.Client;
 import java.util.List;
 
 /**
- * Created by hp on 1/1/2018.
+ * Created by Shaon on 1/1/2018.
  */
 
 public class RecyclerViewAdapterForFilterData extends RecyclerView.Adapter<RecyclerViewAdapterForFilterData.RecyclerViewHolder> {
